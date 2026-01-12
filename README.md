@@ -167,23 +167,6 @@ This architecture provides high localization accuracy, which is essential for de
 
 Checkpoints are automatically saved to `checkpoints/` directory.
 
-### Inference
-
-```bash
-python -m quality_inspection.detect_defects
-```
-
-Options:
-```bash
-# Single image
-python -m quality_inspection.detect_defects --image path/to/image.jpg
-
-# Batch processing
-python -m quality_inspection.detect_defects --input_dir path/to/images/ --output_dir results/
-
-# Custom confidence threshold
-python -m quality_inspection.detect_defects --confidence 0.7
-```
 
 ### Evaluation (mAP)
 
@@ -309,15 +292,6 @@ The achieved mAP@0.5 of **0.866** indicates:
 - Ensure XML annotation files match image filenames
 
 ### Training issues
-
-**Error: "CUDA out of memory"**
-```bash
-# Reduce batch size
-python -m quality_inspection.train --batch_size 1
-
-# Or use CPU (slower)
-python -m quality_inspection.train --device cpu
-```
 
 **Error: "Loss is NaN"**
 - Check learning rate (try reducing to 0.001)
