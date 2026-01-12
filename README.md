@@ -99,19 +99,24 @@ EOF
 
 ```
 quality_inspection/
-├── dataset/
-│   ├── train/
-│   │   ├── images/
-│   │   └── annotations/
-│   ├── valid/
-│   │   ├── images/
-│   │   └── annotations/
+├── data/
+│   ├── annotations/
+│   ├── images/
+│   └── valid/
+│       ├── annotations/
+│       └── images/
 ├── checkpoints/
-├── quality_inspection/
-│   ├── train.py
-│   ├── detect_defects.py
-│   └── eval_map.py
-└── ...
+├── __pycache__/
+├── models/
+│   └── __init__.py
+├── __init__.py
+├── dataset.py
+├── detect_defects.py
+├── eval_map.py
+├── model.py
+├── train.py
+├── .gitattributes
+└── README.md
 ```
 
 ---
@@ -122,8 +127,11 @@ quality_inspection/
 * **Source:** Roboflow Universe
 * **License:** CC BY 4.0
 * **Annotation format:** Pascal VOC (XML)
+* **Image resolution:** 640 × 640 pixels
 * **Annotations:** Bounding boxes per defect instance
-* **Split:** Train / Validation / Test
+* **Location:** `data/` directory
+  - Training: `data/annotations/` and `data/images/`
+  - Validation: `data/valid/annotations/` and `data/valid/images/`
 
 
 ## Model Architecture
@@ -165,13 +173,18 @@ This architecture provides high localization accuracy, which is essential for de
 
 ---
 
-Checkpoints are automatically saved to `checkpoints/` directory.
 
+
+### Inference
+
+```bash
+python detect_defects.py
+```
 
 ### Evaluation (mAP)
 
 ```bash
-python -m quality_inspection.eval_map
+python eval_map.py
 ```
 
 This will compute mean Average Precision on the validation set using IoU threshold of 0.5.
@@ -281,17 +294,56 @@ The achieved mAP@0.5 of **0.866** indicates:
 
 ---
 
+## Project Structure
+
+```
+quality_inspection/
+├── __pycache__/              # Python cache (auto-generated)
+├── checkpoints/              # Saved model weights (Git LFS)
+│   └── pcb_defect.pth       # Trained model checkpoint
+├── data/                     # PCB defect dataset (download separately)
+│   ├── annotations/         # Training annotations (XML)
+│   ├── images/              # Training images
+│   └── valid/               # Validation split
+│       ├── annotations/     # Validation annotations
+│       └── images/          # Validation images
+├── models/                   # Model definitions package
+│   └── __init__.py
+├── results/                  # Inference outputs (generated)
+├── __init__.py              # Package initialization
+├── dataset.py               # Dataset loader
+├── detect_defects.py        # Inference script
+├── eval_map.py              # Evaluation script
+├── model.py                 # Model architecture
+├── train.py                 # Training script
+├── .gitattributes           # Git LFS configuration
+├── requirements.txt         # Python dependencies
+└── README.md
+```
+
+---
 
 ## Troubleshooting
 
 ### Dataset issues
 
 **Error: "Dataset not found"**
-- Verify `dataset/` directory exists with train/valid/test splits
-- Check that each split has `images/` and `annotations/` subdirectories
-- Ensure XML annotation files match image filenames
+- Verify `data/` directory exists with proper structure:
+  - `data/annotations/` and `data/images/` for training
+  - `data/valid/annotations/` and `data/valid/images/` for validation
+- Check that XML annotation files match image filenames
+- Ensure annotations are in Pascal VOC format
 
 ### Training issues
+
+**Error: "CUDA out of memory"**
+```bash
+# Reduce batch size
+python train.py --batch_size 1
+
+# Or use CPU (slower)
+python train.py --device cpu
+```
 
 **Error: "Loss is NaN"**
 - Check learning rate (try reducing to 0.001)
@@ -379,3 +431,6 @@ git lfs pull
 * Achieves **86.6% mAP**, suitable for production deployment
 * Designed with clean package structure and reproducible execution
 * Mirrors real-world industrial quality control systems
+
+---
+
