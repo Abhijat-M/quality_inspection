@@ -147,22 +147,6 @@ python -m quality_inspection.eval_map
 
 ---
 
-## Project Structure
-
-quality_inspection/
-├── checkpoints/
-├── data/
-│   ├── images/
-│   └── annotations/
-├── models/
-│   └── backbone.py
-├── dataset.py
-├── model.py
-├── train.py
-├── detect_defects.py
-└── eval_map.py
-
----
 
 ## Key Takeaways
 
