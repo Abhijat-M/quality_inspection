@@ -86,9 +86,7 @@ def main():
             "severity": severity
         })
 
-    # -----------------------
-    # Output
-    # -----------------------
+
     print(json.dumps(results, indent=2))
 
 
