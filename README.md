@@ -1,4 +1,4 @@
-# Task 2: Automated Quality Inspection System (PCB Defects)
+# Automated Quality Inspection System (PCB Defects)
 
 ## Overview
 
